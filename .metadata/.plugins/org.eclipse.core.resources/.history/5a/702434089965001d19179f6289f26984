@@ -1,0 +1,40 @@
+package com.travel.service;
+
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.travel.mapper.BoardMapper;
+import com.travel.model.Board;
+
+@Service
+public class BoardService {
+
+	@Autowired
+	BoardMapper boardMapper;
+	
+	public String uploadBoard(Board board) {
+		String id = board.getId();
+		
+		int personnum = boardMapper.getIdx(id) + 1;
+		board.setPersonno(personnum);
+		Date date = new Date();
+		board.setRegidate(date);
+		
+		String result = "fail";
+		try {
+
+			boardMapper.insertBoard(board);
+			result = "success";
+		} catch(Exception e) {
+			e.printStackTrace();
+		}
+		return result;
+		
+		
+		
+		
+	}
+}

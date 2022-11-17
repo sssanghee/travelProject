@@ -1,0 +1,22 @@
+package com.travel.mapper;
+
+import java.util.List;
+import java.util.Map;
+
+import org.apache.ibatis.annotations.Mapper;
+
+import com.travel.model.Board;
+import com.travel.model.Like;
+
+@Mapper
+public interface BoardMapper {
+	public int getBoardNum(String id);		//특정 사용자의 게시글 번호확인위해
+	public void insertBoard(Board board);	//게시글 저장
+	
+	public List<Board> pageItem(int page);	//특정 페이지의 아이템가져오기 위해
+	public int countTotalBoard(); 			//총 게시글수를 확인해 페이징의 끝을 넣기 위해
+	
+	public int likeInfo(Like likeData);		//좋아요를 한 이력이 있는지 확인하기위해
+	public void delLikeInfo(Like likeData);	//좋아요한 이력이 있으면 삭제처리
+	public void insertLikeInfo(Like likeData); //좋아요한 이력없으면 추가위해
+}

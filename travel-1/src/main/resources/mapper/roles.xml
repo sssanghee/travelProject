@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.travel.security.jwt.mapper.RoleMapper">
+    <select id="findByName" parameterType="com.travel.security.jwt.model.ERole" resultType="com.travel.security.jwt.model.Role">
+    	select * 
+    	from roles
+    	where name = #{roleUser}
+    </select>
+    <select id="findById" parameterType="Integer" resultType="com.travel.security.jwt.model.Role">
+    	select *
+    	from roles
+    	where id = #{id}
+    </select>
+	<insert id="insertRole" parameterType="com.travel.security.jwt.model.Role">
+		INSERT INTO CENTERS 
+		(centerName, register)
+		VALUES (#{centerName}, #{register})
+	</insert>
+</mapper>

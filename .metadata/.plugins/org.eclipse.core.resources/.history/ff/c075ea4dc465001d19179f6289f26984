@@ -1,0 +1,50 @@
+package com.travel.service;
+
+import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.Date;
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.travel.mapper.BoardMapper;
+import com.travel.model.Board;
+
+@Service
+public class BoardService {
+
+	@Autowired
+	BoardMapper boardMapper;
+	
+	public String uploadBoard(Board board) {
+		System.out.println("uploadBoard Service");
+		
+		String id = board.getId();
+		
+		int personnum = boardMapper.getBoardNum(id) + 1;		
+		board.setBoard_idx(personnum);
+		
+		LocalDateTime now = LocalDateTime.now();
+		String formatedNow = now.format(DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss"));
+		board.setRegidate(formatedNow);
+		
+		String result = "fail";
+		try {
+			boardMapper.insertBoard(board);
+			result = "success";
+		} catch(Exception e) {
+			e.printStackTrace();
+		}
+		System.out.println(result);
+		return result;
+	}
+	
+	public List<Board> pagination(int page) {
+		int lowNum = (page -1) * 10;
+		List<Board> resultBoard = boardMapper.pageItem(lowNum);
+		
+		return resultBoard;
+	}
+}

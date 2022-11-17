@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.travel.mapper.BoardMapper">
+	<select id="getBoardNum" parameterType="String" resultType="Integer">
+		SELECT COUNT(board_idx)
+		FROM board
+		WHERE id = #{id}
+	</select>
+    
+    <insert id="insertBoard" parameterType="com.travel.model.Board">
+    	INSERT INTO board(id, board_idx, title, content, regidate)
+    	VALUES(#{id}, #{board_idx}, #{title}, #{content}, #{regidate})
+    </insert>
+    
+    <select id="pageItem" parameterType="Integer" resultType="com.travel.model.Board">
+    	SELECT * 
+    	FROM board
+    	ORDER BY bno DESC
+    	LIMIT ${page}, 10
+    </select>
+    
+    <select id="countTotalBoard" resultType="Integer">
+    	SELECT COUNT(*)
+    	FROM board
+
+    </select>
+</mapper>

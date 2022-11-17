@@ -1,0 +1,15 @@
+package com.travel.model;
+
+import lombok.Getter;
+import lombok.Setter;
+
+@Getter
+@Setter
+public class Comment {
+	private String id;
+	private long boardIdx;
+	private long commentNum;
+	private String comment;
+	private String reactUser;
+	private String regidate;
+}

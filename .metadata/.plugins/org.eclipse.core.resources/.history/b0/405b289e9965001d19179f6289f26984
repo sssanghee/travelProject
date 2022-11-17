@@ -1,0 +1,21 @@
+package com.travel.model;
+
+import java.util.Date;
+
+import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
+
+@Getter
+@Setter
+@Data
+public class Board {
+	
+	private long bno;
+	private String id;
+	private long personno;
+	private String title;
+	private String content;
+	private Date regidate;
+	
+}

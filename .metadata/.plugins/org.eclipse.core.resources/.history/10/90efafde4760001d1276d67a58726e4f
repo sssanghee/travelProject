@@ -1,0 +1,13 @@
+package com.travel.repository;
+
+import java.util.List;
+
+import org.springframework.data.repository.CrudRepository;
+
+import com.travel.model.Image;
+
+public interface BoardPictureRepository  extends CrudRepository<Image, Integer> {
+    Image save(Image boardPicture);
+
+    List<Image> findAllByBoardIdx(Integer boardIdx);
+}

@@ -1,0 +1,16 @@
+package com.travel.mapper;
+
+import java.util.List;
+
+import org.apache.ibatis.annotations.Mapper;
+
+import com.travel.model.Board;
+
+@Mapper
+public interface BoardMapper {
+	public int getBoardNum(String id);
+	public void insertBoard(Board board);
+	
+	public List<Board> PageItem(int page);
+	
+}
