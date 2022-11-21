@@ -11,7 +11,7 @@ import uml from '@toast-ui/editor-plugin-uml';
 import BoardDataService from '../../services/BoardService';
 import axios from 'axios';
 import authHeader from '../../services/auth-header';
-
+import KakaoMap from './KakaoMap';
 
 
 function ToastEditor(props) {
@@ -19,10 +19,14 @@ function ToastEditor(props) {
     const auth = useSelector(state => state.auth);
 
     const [ title, setTitle ] = useState("");
-    const [ content, setContent ] = useState("");
+    const [ place, setPlace ] = useState("");
 
     const titleChange = (res) => {
         setTitle(res.target.value);
+    }
+
+    const takePlace = (e) => {
+        setPlace(e);
     }
 
     const onSave = () => {
@@ -34,6 +38,7 @@ function ToastEditor(props) {
             id: auth.user.id,
             title: title,
             content: contents,
+            adress: place
         };
         BoardDataService.uploadBoard(data)
         .then((res) => {
@@ -83,7 +88,7 @@ function ToastEditor(props) {
             //     }
             // }}
             />
-            
+            <KakaoMap addOrShow="add" placeFunc={takePlace}/>
             <button onClick={onSave}>저장</button>
         </div>
     );

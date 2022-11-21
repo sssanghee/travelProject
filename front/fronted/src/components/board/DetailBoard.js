@@ -5,17 +5,17 @@ import '@toast-ui/editor/dist/toastui-editor-viewer.css';
 import { Viewer } from '@toast-ui/react-editor';
 import BoardDataService from "../../services/BoardService";
 import { useEffect } from 'react';
+import KakaoMap from './KakaoMap';
 
 function DetailBoard(props) {
     const location = useLocation();
     const auth = useSelector(state => state.auth);
-    console.log(auth);
     const boardInfo = location.state.detailBoard.boardInfo;
     const content = boardInfo.content;
     const [ allComments, setAllComments ] = useState([]);
     const [ comment, setComment ] = useState("");
     const [ like, setLike ] = useState(0);
-
+    console.log(boardInfo);
     const commenData = {
         id: boardInfo.id,
         boardIdx: boardInfo.board_idx,
@@ -93,11 +93,10 @@ function DetailBoard(props) {
 
     return (
         <div>
-            게시판 상세페이지
             <div>
                 {boardInfo.title}
                 {boardInfo.regidate}
-            </div>
+            </div><hr/>
             <div>
                 {boardInfo.id}
             </div>
@@ -124,6 +123,12 @@ function DetailBoard(props) {
 
                 }
             </div>
+            {
+                boardInfo.adress === null
+                ? <></>
+                : <KakaoMap addOrShow={boardInfo.adress} />
+            }
+            {/* <KakaoMap addOrShow={boardInfo.adress} /> */}
         </div>
     );
 }

@@ -21,8 +21,6 @@ public class BoardService {
 	BoardMapper boardMapper;
 	
 	public String uploadBoard(Board board) {
-		System.out.println("uploadBoard Service");
-		
 		String id = board.getId();
 		
 		int personnum = boardMapper.getBoardNum(id) + 1;		
@@ -80,15 +78,6 @@ public class BoardService {
 		String formatedNow = now.format(DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss"));
 		comment.setCommentNum(commentNum);
 		comment.setRegidate(formatedNow);
-//		String msg;
-//		try {
-//			boardMapper.addComment(comment);
-//			msg = "success";
-//		} catch(Exception e) {
-//			e.printStackTrace();
-//			msg = "fail";
-//		}
-//		return msg;
 		
 		boardMapper.addComment(comment);
 		return comment;

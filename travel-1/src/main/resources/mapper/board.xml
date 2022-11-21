@@ -8,8 +8,8 @@
 	</select>
     
     <insert id="insertBoard" parameterType="com.travel.model.Board">
-    	INSERT INTO board(id, board_idx, title, content, regidate)
-    	VALUES(#{id}, #{board_idx}, #{title}, #{content}, #{regidate})
+    	INSERT INTO board(id, board_idx, title, content, adress, regidate)
+    	VALUES(#{id}, #{board_idx}, #{title}, #{content}, #{adress}, #{regidate})
     </insert>
     
     <select id="pageItem" parameterType="Integer" resultType="com.travel.model.Board">
@@ -28,12 +28,12 @@
     <select id="likeInfo" parameterType="com.travel.model.Like" resultType="Integer">
     	SELECT COUNT(*)
     	FROM daily.likes
-    	WHERE react_user = #{reactUser}
+    	WHERE react_user = #{reactUser} AND id = #{id} AND board_idx = #{boardIdx}
     </select>
     
     <delete id="delLikeInfo" parameterType="com.travel.model.Like">
     	DELETE FROM daily.likes
-    	WHERE react_user = #{reactUser}
+    	WHERE react_user = #{reactUser} AND id = #{id} AND board_idx = #{boardIdx}
     </delete>
     
     <insert id="insertLikeInfo" parameterType="com.travel.model.Like">

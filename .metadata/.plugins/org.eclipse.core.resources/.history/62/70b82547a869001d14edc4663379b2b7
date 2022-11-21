@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.travel.mapper.BoardMapper">
+	<select id="getBoardNum" parameterType="String" resultType="Integer">
+		SELECT COUNT(board_idx)
+		FROM board
+		WHERE id = #{id}
+	</select>
+    
+    <insert id="insertBoard" parameterType="com.travel.model.Board">
+    	INSERT INTO board(id, board_idx, title, content, regidate)
+    	VALUES(#{id}, #{board_idx}, #{title}, #{content}, #{regidate})
+    </insert>
+    
+    <select id="pageItem" parameterType="Integer" resultType="com.travel.model.Board">
+    	SELECT * 
+    	FROM board
+    	ORDER BY bno DESC
+    	LIMIT ${page}, 10
+    </select>
+    
+    <select id="countTotalBoard" resultType="Integer">
+    	SELECT COUNT(*)
+    	FROM board
+
+    </select>
+    
+    <select id="likeInfo" parameterType="com.travel.model.Like" resultType="Integer">
+    	SELECT COUNT(*)
+    	FROM daily.likes
+    	WHERE react_user = #{reactUser} AND id = #{id} AND board_idx = #{boardIdx}
+    </select>
+    
+    <delete id="delLikeInfo" parameterType="com.travel.model.Like">
+    	DELETE FROM daily.likes
+    	WHERE react_user = #{reactUser} AND id = #{id} AND board_idx = #{boardIdx}
+    </delete>
+    
+    <insert id="insertLikeInfo" parameterType="com.travel.model.Like">
+    	INSERT INTO daily.likes(id, board_idx, react_user)
+    	VALUES(#{id}, #{boardIdx}, #{reactUser})
+    </insert>
+    
+    <select id="totalLike" parameterType="com.travel.model.Like" resultType="Integer">
+    	SELECT COUNT(*)
+    	FROM daily.likes
+    	WHERE id = #{id} AND board_idx = #{boardIdx}
+    </select>
+    
+    <select id="findCommentNum" parameterType="com.travel.model.Comment" resultType="Integer">
+    	SELECT COUNT(*)
+    	FROM daily.comments
+    	WHERE id = #{id} AND boardIdx = #{boardIdx}
+    </select>
+    
+    <insert id="addComment" parameterType="com.travel.model.Comment">
+    	INSERT INTO daily.comments(id, boardIdx, commentNum, comment, reactUser, regidate)
+    	VALUES(#{id}, #{boardIdx}, #{commentNum}, #{comment}, #{reactUser}, #{regidate})
+    </insert>
+    
+    <select id="findAllComment" parameterType="com.travel.model.Comment" resultType="com.travel.model.Comment">
+    	SELECT *
+    	FROM daily.comments
+    	WHERE id = #{id} AND boardIdx = #{boardIdx}
+    </select>
+</mapper>

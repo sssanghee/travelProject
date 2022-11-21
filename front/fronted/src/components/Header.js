@@ -25,6 +25,7 @@ const Header = () =>{
                         <button>로그인</button>
                     </Link>
             }
+            <hr />
         </div>
     );
 }

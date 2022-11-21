@@ -17,6 +17,7 @@ public class Board {
 	private long board_idx;
 	private String title;
 	private String content;
+	private String adress;
 	private String regidate;
 	
 }
