@@ -7,8 +7,10 @@ import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 import java.util.UUID;
 
 import javax.servlet.http.HttpServletRequest;
@@ -53,9 +55,8 @@ import com.travel.service.FileService;
 @RequestMapping("/api/board")
 public class BoardController {
 	
-	@Value("${file.path")
-	private String fileRealPath;
-
+	String UPLOAD_PATH = "C:/studyStored";	
+	
 	@Autowired
 	BoardService boardService;
 	
@@ -74,30 +75,61 @@ public class BoardController {
 		}
 	}
 	
-	@PostMapping(value="/uploadImage", produces = MediaType.IMAGE_JPEG_VALUE)
-	public ResponseEntity<?> uploadImage(
-//			@RequestParam(value="file", required=false) 
-			@ModelAttribute MultipartFile file) {
-		System.out.println("컨트롤러 진입");
-//		System.out.println(file);
-//		System.out.println(file.getOriginalFilename());
-//		System.out.println(file.getContentType());
-//		System.out.println(file.getSize());
-//		System.out.println(file.getName());
-		UUID uuid = UUID.randomUUID();
-		String uuidFilename = uuid + "_" + file.getOriginalFilename();
-		String samplePath = "F///C:/studyStored/"+uuidFilename;
-		System.out.println(samplePath);
+	@GetMapping("/getImage/{fileId}/{fileType}")
+	public ResponseEntity<byte[]> getImageFile(@PathVariable String fileId, @PathVariable String fileType){
 		try {
-			file.transferTo(new File(samplePath));
-			Resource resource = new UrlResource(samplePath);
+			System.out.println("getImage");
+			FileInputStream fis = new FileInputStream(UPLOAD_PATH + "/" + fileId + "." + fileType);
+
+			ByteArrayOutputStream baos = new ByteArrayOutputStream();
 			
-			return new ResponseEntity<>(resource, HttpStatus.OK);
-		} catch(Exception e) {
+			byte buffer[] = new byte[1024];
+
+			int length = 0;
+
+			while((length = fis.read(buffer)) != -1) {
+				baos.write(buffer, 0, length);
+			}
+
+			return new ResponseEntity<byte[]>(baos.toByteArray(), HttpStatus.OK);
+			
+		} catch(IOException e) {
 			e.printStackTrace();
-			return new ResponseEntity<>(samplePath, HttpStatus.OK);
+			return new ResponseEntity<byte[]>(new byte[] {}, HttpStatus.CONFLICT);
 		}
 	}
+	
+	@PostMapping(value="/uploadImage", produces = MediaType.IMAGE_JPEG_VALUE)
+	public ResponseEntity<?> uploadImage(@ModelAttribute MultipartFile file) {
+		try {
+			String fileId = (new Date().getTime() + "" + (new Random().ints(1000, 9999).findAny().getAsInt()));
+			String originName = file.getOriginalFilename();
+			String fileExtension = originName.substring(originName.lastIndexOf(".") + 1);
+			originName = originName.substring(0, originName.lastIndexOf("."));
+			fileId = fileId + "_" + originName;
+			
+			long fileSize = file.getSize();
+			
+			File fileSave = new File(UPLOAD_PATH, fileId + "." + fileExtension);
+			
+			if(!fileSave.exists()) {
+				fileSave.mkdir();
+			}
+			
+			file.transferTo(fileSave);		
+			
+			System.out.println("fileId= " + fileId);
+			System.out.println("originName= " + originName);
+			System.out.println("fileExtension= " + fileExtension);
+			System.out.println("fileSize= " + fileSize);
+			
+			return new ResponseEntity<>("http://localhost:8080/api/board/getImage/" + fileId + "/" + fileExtension, HttpStatus.OK);
+		} catch(IOException e) {
+			e.printStackTrace();
+			return new ResponseEntity<>(null, HttpStatus.CONFLICT);
+		}
+	}
+	
 	
 	@GetMapping("/pagination/{page}")
 	public ResponseEntity<List<Board>> Pagination(@PathVariable("page") int page){

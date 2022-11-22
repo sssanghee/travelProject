@@ -9,8 +9,6 @@ import colorSyntax from '@toast-ui/editor-plugin-color-syntax';
 import tableMergedCell from '@toast-ui/editor-plugin-table-merged-cell';
 import uml from '@toast-ui/editor-plugin-uml';
 import BoardDataService from '../../services/BoardService';
-import axios from 'axios';
-import authHeader from '../../services/auth-header';
 import KakaoMap from './KakaoMap';
 
 
@@ -32,8 +30,6 @@ function ToastEditor(props) {
     const onSave = () => {
         const editorInstance = editorRef.current.getInstance();
         const contents = editorInstance.getHTML();
-        console.log(contents);
-        console.log(title);
         const data = {
             id: auth.user.id,
             title: title,
@@ -42,12 +38,11 @@ function ToastEditor(props) {
         };
         BoardDataService.uploadBoard(data)
         .then((res) => {
-            console.log(res);
+            window.location.replace("/");
         })
         .catch((e) => {
             console.log(e);
         })
-        
     }
 
     return (
@@ -57,36 +52,23 @@ function ToastEditor(props) {
             <Editor initialValue='' useageStatistics={false}
             plugins={[chart, codeSyntaxHighlight, colorSyntax, tableMergedCell, uml]}
             ref={editorRef}
-            // hooks={{         이미지 업로드 구현 중.
-            //     addImageBlobHook: async (blob, callback) => {
-            //         console.log(blob);
-            //         const user = JSON.parse(window.localStorage.getItem('user'));
-            //         const img = blob.name;
-            //         const formData = new FormData();
+            hooks={{         
+                addImageBlobHook: async (blob, callback) => {
 
-            //         formData.append('file', blob);
+                    const formData = new FormData();
+                    formData.append('file', blob);
 
-            //         for(let key of formData.keys()){
-            //             console.log(key);
-            //         }
-            //         for(let value of formData.values()){
-            //             console.log(value);
-            //         }
-            //         BoardDataService.uploadImg(formData)
-            //         .then((res) => {
-            //             console.log(res);
-            //             console.log(res.data);
-            //             const imageData = new FormData();
-            //             imageData.append('imageFile', res.data);
-            //             let imgData = URL.createObjectURL(res.data);
-
-            //             callback(imgData, 'alt text');
-            //         })
-            //         .catch((e) => {
-            //             console.log(e);
-            //         })
-            //     }
-            // }}
+                    BoardDataService.uploadImg(formData)
+                    .then((res) => {
+                        const imageData = new FormData();
+                        imageData.append('imageFile', res.data);
+                        callback(res.data, 'img');
+                    })
+                    .catch((e) => {
+                        console.log(e);
+                    })
+                }
+            }}
             />
             <KakaoMap addOrShow="add" placeFunc={takePlace}/>
             <button onClick={onSave}>저장</button>

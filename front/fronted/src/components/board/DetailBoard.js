@@ -124,11 +124,10 @@ function DetailBoard(props) {
                 }
             </div>
             {
-                boardInfo.adress === null
+                boardInfo.adress === ''
                 ? <></>
                 : <KakaoMap addOrShow={boardInfo.adress} />
             }
-            {/* <KakaoMap addOrShow={boardInfo.adress} /> */}
         </div>
     );
 }

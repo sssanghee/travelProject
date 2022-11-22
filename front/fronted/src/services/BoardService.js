@@ -10,7 +10,7 @@ class BoardDataService {
             "Content-type": "application/json",});
     };
 
-    uploadImg(data){        //구현중
+    uploadImg(data){
         return axios.post( API_URL + "/uploadImage", data, {
             headers : authHeader(),
             "Content-type" : "multipart/form-data"

@@ -1,0 +1,199 @@
+package com.travel.controller;
+
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
+import java.util.Random;
+import java.util.UUID;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.validation.Valid;
+
+import org.apache.commons.io.IOUtils;
+import org.apache.commons.io.output.ByteArrayOutputStream;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.FileSystemResource;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.UrlResource;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestPart;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
+import org.springframework.web.servlet.ModelAndView;
+
+import com.travel.model.Board;
+import com.travel.model.Comment;
+import com.travel.model.Like;
+import com.travel.service.BoardService;
+import com.travel.service.FileService;
+
+@CrossOrigin(origins = "http://localhost:3000")
+@RestController
+@RequestMapping("/api/board")
+public class BoardController {
+	
+	String UPLOAD_PATH = "C:/studyStored";	
+	
+	@Autowired
+	BoardService boardService;
+	
+	@Autowired
+	FileService fileService;
+	
+	@PostMapping("/uploadBoard")
+	public ResponseEntity<String> uploadBoard(@RequestBody Board board){
+		try {
+			String result = boardService.uploadBoard(board);
+			
+			return new ResponseEntity<>(result, HttpStatus.OK);
+		} catch(Exception e) {
+			e.printStackTrace();
+			return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+	}
+	
+	@PostMapping(value="/uploadImage", produces = MediaType.IMAGE_JPEG_VALUE)
+	public ResponseEntity<?> uploadImage(@ModelAttribute MultipartFile file) {
+		System.out.println("컨트롤러 진입");
+		UUID uuid = UUID.randomUUID();
+		String uuidFilename = uuid + "_" + file.getOriginalFilename();
+		String samplePath = "C:/studyStored/"+uuidFilename;
+		System.out.println(samplePath);
+		try {
+			file.transferTo(new File(samplePath));
+			Resource resource = new UrlResource(samplePath);
+			
+			return new ResponseEntity<>("http://localhost:8080/getImage/" + uuidFilename , HttpStatus.OK);
+		} catch(Exception e) {
+			e.printStackTrace();
+			return new ResponseEntity<>(samplePath, HttpStatus.OK);
+		}
+	}
+	
+//	@PostMapping("/uploadImage")
+//	public ResponseEntity<Object> uploadImage(MultipartFile files[]){
+//		try {
+//			MultipartFile file = files[0];
+//			
+//			String fileId = (new Date().getTime()) + "" + (new Random().ints(1000,9999).findAny().getAsInt());
+//			String originName = file.getOriginalFilename();
+//			String fileExtension = originName.substring(originName.lastIndexOf(".") + 1);
+//			originName = originName.substring(0, originName.lastIndexOf("."));
+//			long fileSize = file.getSize();
+//			
+//			File fileSave = new File(UPLOAD_PATH, fileId + "." + fileExtension);
+//			if(!fileSave.exists()) {
+//				fileSave.mkdir();
+//			}
+//			
+//			file.transferTo(fileSave);
+//			System.out.println("fileId= " + fileId);
+//			System.out.println("originName= " + originName);
+//			System.out.println("fileExtension= " + fileExtension);
+//			System.out.println("fileSize= " + fileSize);
+//			
+//			return new ResponseEntity<Object>("http://localhost:8080/getImage/" +fileId + "/" + fileExtension, HttpStatus.OK);
+//			
+//		} catch(Exception e) {
+//			return new ResponseEntity<Object>(null, HttpStatus.CONFLICT);
+//		}
+//	}
+	
+	
+	@GetMapping("/pagination/{page}")
+	public ResponseEntity<List<Board>> Pagination(@PathVariable("page") int page){
+		try {
+			List<Board> pageBoard = boardService.pagination(page);
+			return new ResponseEntity<>(pageBoard, HttpStatus.OK);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+	}
+	
+	@GetMapping("/totalItem")
+	public ResponseEntity<Integer> countTotalBoard() {
+		try {
+			int totalItem = boardService.countTotalBoard();
+			return new ResponseEntity<>(totalItem, HttpStatus.OK);
+		} catch(Exception e) {
+			e.printStackTrace();
+			return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+	}
+	
+	@PostMapping("/clickLike")
+	public ResponseEntity<Integer> clickLike(@RequestBody Like likeData){
+		try {
+			int result = boardService.clickLike(likeData);
+			return new ResponseEntity<>(result, HttpStatus.OK);
+		} catch(Exception e) {
+			e.printStackTrace();
+			return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+	}
+	
+	@PostMapping("/searchLikeCount")
+	public ResponseEntity<Integer> searchLikeCount(@RequestBody Like likeData){
+		try {
+			int result = boardService.searchLikeCount(likeData);
+			return new ResponseEntity<>(result, HttpStatus.OK);
+		} catch(Exception e) {
+			e.printStackTrace();
+			return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+	}
+	
+	@PutMapping("/addComment")
+	public ResponseEntity<Comment> addComment(@RequestBody Comment comment){
+//		String result = boardService.addComment(comment);
+//		if(result.equals("success")){
+//
+//			return new ResponseEntity<>(result, HttpStatus.OK);
+//		}else {
+//			return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+//		}
+		
+		try {
+			Comment result = boardService.addComment(comment);
+			return new ResponseEntity<>(result, HttpStatus.OK);
+		} catch(Exception e) {
+			e.printStackTrace();
+			return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+	}
+	
+	@PostMapping("/findAllComments")
+	public ResponseEntity<List<Comment>> findAllComments(@RequestBody Comment comment){
+		try {
+			List<Comment> result = boardService.findAllComments(comment);
+			return new ResponseEntity<>(result, HttpStatus.OK);
+		} catch(Exception e) {
+			e.printStackTrace();
+			return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+	}
+}
