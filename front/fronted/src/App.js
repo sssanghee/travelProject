@@ -24,6 +24,7 @@ function App() {
 
       <BrowserRouter>
         <Header />
+        <hr />
         <Routes>
           <Route path="/" element={ <MainPage /> } />
           <Route path="signin" element={ <Signin /> } />

@@ -5,6 +5,7 @@ import Pagination from "react-js-pagination";
 import BoardDataService from '../services/BoardService';
 import { useEffect } from 'react';
 import DetailBoard from './board/DetailBoard';
+import "../styles/MainPage.css";
 
 const MainPage = () => {
     const navigate = useNavigate();
@@ -94,8 +95,6 @@ const MainPage = () => {
                 nextPageText={"›"}  
                 onChange={handlePageChange}             //페이지버튼 클릭시, 실행
                 />
-
-
         </div>
     );
 }

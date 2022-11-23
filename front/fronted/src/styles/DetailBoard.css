@@ -1,0 +1,32 @@
+.likeAndComment {
+    width: 90%;
+    display: flex;
+}
+.comments {
+    margin-left: auto;
+}
+
+.comment {
+    width: 90%;
+    display: flex;
+}
+
+.commentWriter {
+    margin-left: auto;
+}
+.commentDate {
+    margin-left: 20px;
+}
+
+.titleIdAndDate {
+    width: 90%;
+    display: flex;
+}
+
+.titleId{
+    margin-left: auto;
+}
+
+.titleDate{
+    margin-left: 20px;
+}

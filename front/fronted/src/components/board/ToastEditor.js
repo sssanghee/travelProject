@@ -10,7 +10,7 @@ import tableMergedCell from '@toast-ui/editor-plugin-table-merged-cell';
 import uml from '@toast-ui/editor-plugin-uml';
 import BoardDataService from '../../services/BoardService';
 import KakaoMap from './KakaoMap';
-
+import "../../styles/ToastEditor.css";
 
 function ToastEditor(props) {
     const editorRef = useRef();
@@ -28,6 +28,10 @@ function ToastEditor(props) {
     }
 
     const onSave = () => {
+        if(title === ""){
+            alert("제목입력하세요");
+            return;
+        }
         const editorInstance = editorRef.current.getInstance();
         const contents = editorInstance.getHTML();
         const data = {
@@ -47,9 +51,10 @@ function ToastEditor(props) {
 
     return (
         <div>
-            <input type="text" value={title} onChange={titleChange} placeholder="제목"></input>
+            <input className="titleInput" type="text" value={title} onChange={titleChange} placeholder="제목"></input>
                 
-            <Editor initialValue='' useageStatistics={false}
+            <button onClick={onSave} className="saveBtn">게시글 저장</button>
+            <Editor initialValue='' useageStatistics={false} height="60vh"
             plugins={[chart, codeSyntaxHighlight, colorSyntax, tableMergedCell, uml]}
             ref={editorRef}
             hooks={{         
@@ -70,8 +75,8 @@ function ToastEditor(props) {
                 }
             }}
             />
+            <hr />
             <KakaoMap addOrShow="add" placeFunc={takePlace}/>
-            <button onClick={onSave}>저장</button>
         </div>
     );
 }

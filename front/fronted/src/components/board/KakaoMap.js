@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from 'react';
+import "../../styles/KakaoMap.css";
 
 const { kakao } = window;
 
 const KakaoMap = (props) => {
-    const [ location, setLocation ] = useState("순천만"); 
+    const [ location, setLocation ] = useState("서울시청"); 
     
     const [ inputText, setInputText ] = useState("");
     useEffect(() => {
@@ -59,21 +60,22 @@ const KakaoMap = (props) => {
     }
 
     return (
-        <div>
+        <div className='kakaoMapContainer'>
             {
                 props.addOrShow === "add"
-                ? 
-                    <>
-                        <input id="searchMap" value={inputText} onChange={onLocationChange} placeholder="가급적 자세하게 입력하세요"></input>
-                        <button type="submit" onClick={searchMapSubmit}>검색</button>  
-                    </>
+                ?
+                    <div className='searchArea'>
+                        <input id="searchMap" className='searchInput' value={inputText} onChange={onLocationChange} placeholder="장소를 자세하게 입력하세요"></input>
+                        <button className="searchBtn" type="submit" onClick={searchMapSubmit}>검색</button>  
+                        
+                    </div>
                 :   <></>
             }
             <div
                 id="myMap"
                 style={{
-                width: '500px',
-                height: '500px',
+                width: '60vw',
+                height: '50vh',
                 }}>
             </div>
         </div>

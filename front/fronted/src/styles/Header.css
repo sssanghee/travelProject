@@ -1,0 +1,8 @@
+.header {
+    width: 90%;
+    margin: 5px auto;
+    display: flex;
+}
+.loginOut {
+    margin-left: auto;
+}

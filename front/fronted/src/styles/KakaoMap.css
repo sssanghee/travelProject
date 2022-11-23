@@ -1,0 +1,13 @@
+.kakaoMapContainer {
+    width: 90%;
+    /* display: flex; */
+}
+#myMap {
+    width: 70%;
+    margin-top: 10px;
+    margin-left: 15%;
+    margin-right: 15%;
+}
+.searchArea {
+    margin-top: 10px;
+}

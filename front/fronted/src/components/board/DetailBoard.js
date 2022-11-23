@@ -6,6 +6,7 @@ import { Viewer } from '@toast-ui/react-editor';
 import BoardDataService from "../../services/BoardService";
 import { useEffect } from 'react';
 import KakaoMap from './KakaoMap';
+import "../../styles/DetailBoard.css";
 
 function DetailBoard(props) {
     const location = useLocation();
@@ -64,21 +65,23 @@ function DetailBoard(props) {
     };
 
     const onComments = () => {
+        if(comment === ""){
+            alert("댓글을 입력하세요");
+            return;
+        }
+
         const commentData = {
             id: boardInfo.id,
             boardIdx: boardInfo.board_idx,
             reactUser: auth.user.id,
             comment: comment,
         };
-
+        setComment("");
         BoardDataService.addComment(commentData)
         .then((response) => {
             BoardDataService.findAllComments(commenData)
             .then((res) => {
-                console.log(res);
-                console.log(allComments);
                 setAllComments([ ...allComments, response.data]);
-                console.log(allComments);
             })
             .catch((e) => {
                 console.log(e);
@@ -93,36 +96,53 @@ function DetailBoard(props) {
 
     return (
         <div>
-            <div>
-                {boardInfo.title}
-                {boardInfo.regidate}
-            </div><hr/>
-            <div>
-                {boardInfo.id}
+            <div className='titleIdAndDate'>
+                <div>
+                    {boardInfo.title}
+                </div>
+                <div className='titleId'>
+                    {boardInfo.id}
+                </div>                
+                <div className='titleDate'>
+                    {boardInfo.regidate}
+                </div>
             </div>
+            
+            <hr/>
             <div>
                 <Viewer initialValue={content} />
             </div>
-            <div>
-                좋아요: {like}
-                <button onClick={onLikeClick}>좋아요</button>
+            <hr />
+            <div className='likeAndComment'>
+                <div>
+                    좋아요: {like}
+                    <button onClick={onLikeClick}>좋아요</button>
+                </div>
+                <div className='comments'>
+                    <input placeholder='댓글' value={comment} onChange={commentChange}></input>
+                    <button onClick={onComments}>작성</button>
+                </div>
             </div>
-            <div>
-                <input placeholder='댓글' value={comment} onChange={commentChange}></input>
-                <button onClick={onComments}>작성</button>
-                {
+            <hr />
+            {
                     allComments.map((el, idx) => {
                         return(
-                            <div key={el.commentNum}>
-                                {el.reactUser}
-                                {el.regidate}
-                                {el.comment}
+                            <div key={el.commentNum} className="comment">
+                                <div className='commentContent'>
+                                    {el.comment}
+                                </div>
+                                <div className='commentWriter'>
+                                    {el.reactUser}
+                                </div>
+                                <div className='commentDate'>
+                                    {el.regidate}
+                                </div>
                             </div>
                         )
                     })
 
                 }
-            </div>
+            <hr />
             {
                 boardInfo.adress === ''
                 ? <></>
