@@ -8,6 +8,8 @@ import org.apache.ibatis.annotations.Mapper;
 import com.travel.model.Board;
 import com.travel.model.Comment;
 import com.travel.model.Like;
+import com.travel.model.forMyAllContents;
+import com.travel.model.forMyProfileContent;
 
 @Mapper
 public interface BoardMapper {
@@ -25,4 +27,8 @@ public interface BoardMapper {
 	public int findCommentNum(Comment comment);		//댓글순서를 정렬하기 위해
 	public void addComment(Comment comment);		//댓글 인서트위해
 	public List<Comment> findAllComment(Comment comment); 	//특정 게시물 댃글 다 가져오기 위함
+
+	public forMyAllContents myProfileTotalCounts(String id);	//id의 게시물, 좋아요, 댓글수 모두 가져옴
+	public List<Board> myPageItem(forMyProfileContent params);	//프로필에 있는 내가 쓴 게시글을 보기위해
+	public List<Comment> myCommentItem(forMyProfileContent params); //내가쓴 댓글 모두 보기위해
 }

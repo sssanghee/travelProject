@@ -47,6 +47,7 @@ import org.springframework.web.servlet.ModelAndView;
 import com.travel.model.Board;
 import com.travel.model.Comment;
 import com.travel.model.Like;
+import com.travel.model.forMyAllContents;
 import com.travel.service.BoardService;
 import com.travel.service.FileService;
 
@@ -132,11 +133,36 @@ public class BoardController {
 	
 	
 	@GetMapping("/pagination/{page}")
-	public ResponseEntity<List<Board>> Pagination(@PathVariable("page") int page){
+	public ResponseEntity<List<Board>> pagination(@PathVariable("page") int page){
 		try {
 			List<Board> pageBoard = boardService.pagination(page);
 			return new ResponseEntity<>(pageBoard, HttpStatus.OK);
 		} catch (Exception e) {
+			e.printStackTrace();
+			return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+	}
+	
+	@GetMapping("/pagination/{page}/{id}/{type}")
+	public ResponseEntity<List<?>> myBoardPagination(@PathVariable("page") int page,
+		@PathVariable("id") String id, @PathVariable("type") String type){
+
+		try {
+			List<?> result = boardService.myBoardPagination(page, id, type);
+			return new ResponseEntity<>(result, HttpStatus.OK);
+			
+		} catch(Exception e) {
+			e.printStackTrace();
+			return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+	}
+	
+	@GetMapping("/myTotalItem/{id}")
+	public ResponseEntity<forMyAllContents> myProfileTotalCount(@PathVariable("id") String id) {
+		try {
+			forMyAllContents result = boardService.myProfileTotalCount(id);
+			return new ResponseEntity<>(result, HttpStatus.OK);
+		} catch(Exception e) {
 			e.printStackTrace();
 			return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
 		}
@@ -177,14 +203,6 @@ public class BoardController {
 	
 	@PutMapping("/addComment")
 	public ResponseEntity<Comment> addComment(@RequestBody Comment comment){
-//		String result = boardService.addComment(comment);
-//		if(result.equals("success")){
-//
-//			return new ResponseEntity<>(result, HttpStatus.OK);
-//		}else {
-//			return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
-//		}
-		
 		try {
 			Comment result = boardService.addComment(comment);
 			return new ResponseEntity<>(result, HttpStatus.OK);

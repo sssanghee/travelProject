@@ -24,12 +24,35 @@ class BoardDataService {
         });
     };
 
+    myPagination(page, id, type) {
+        return axios.get( API_URL + `/pagination/${page}/${id}/${type}`, {
+            headers : authHeader(),
+            "Content-type" : "application/json",
+        });
+    }
+
+
     totalItem(){
         return axios.get( API_URL + "/totalItem" , {
             headers : authHeader(),
             "Content-type" : "application/json",
         });
     };
+
+    myTotalItem(id){
+        return axios.get( API_URL + `/myTotalItem/${id}` , {
+            headers : authHeader(),
+            "Content-type" : "application/json",
+        });
+    }
+
+
+
+
+
+
+
+
 
     searchLikeCount(data){
         return axios.post( API_URL + "/searchLikeCount", data, {

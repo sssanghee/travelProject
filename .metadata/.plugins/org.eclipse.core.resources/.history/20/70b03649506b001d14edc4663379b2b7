@@ -1,0 +1,7 @@
+package com.travel.model;
+
+public class forMyAllContents {
+	private int countBoard;
+	private int likesCount;
+	private int commentsCount;
+}

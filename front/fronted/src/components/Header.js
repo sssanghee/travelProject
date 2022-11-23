@@ -13,6 +13,7 @@ const Header = () =>{
         dispatch(logout());
     };
 
+
     console.log(auth);
     return (
         <div className='header'>
@@ -24,7 +25,12 @@ const Header = () =>{
             <div className='loginOut'>
             {
                 auth.isLoggedIn
-                ?   <button onClick={signOut}>로그아웃</button>
+                ?   <>   
+                        <Link to="profile">
+                            <button>내 정보</button>
+                        </Link>
+                        <button onClick={signOut}>로그아웃</button>
+                    </>
                 :   <Link to="signIn">
                         <button>로그인</button>
                     </Link>

@@ -15,7 +15,7 @@ const MainPage = () => {
     const [ page, setPage ] = useState(1);
 
     useEffect(() => {
-        BoardDataService.totalItem()
+        BoardDataService.totalItem()    //총게시물수를 가져와 페이징위해
         .then((res) => {
             console.log(res);
             setTotalItem(res.data);

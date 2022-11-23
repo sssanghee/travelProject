@@ -63,4 +63,28 @@
     	FROM daily.comments
     	WHERE id = #{id} AND boardIdx = #{boardIdx}
     </select>
+    
+    <select id="myPageItem" parameterType="com.travel.model.forMyProfileContent" resultType="com.travel.model.Board">
+    	SELECT * 
+    	FROM board
+    	WHERE id = #{id}
+    	ORDER BY bno DESC
+    	LIMIT ${page}, 10
+    </select>
+    
+    <select id="myProfileTotalCounts" parameterType="String" resultType="com.travel.model.forMyAllContents">
+    	SELECT a.countBoard, b.likesCount, c.commentsCount
+    	FROM (SELECT COUNT(id) as countBoard FROM daily.board WHERE id=#{id}) as a,
+    		(SELECT COUNT(id) as likesCount FROM daily.likes WHERE react_user=#{id}) as b,
+    		(SELECT COUNT(id) as commentsCount FROM daily.comments WHERE reactUser=#{id}) as c
+    	
+    </select>
+    
+    <select id="myCommentItem" parameterType="com.travel.model.forMyProfileContent" resultType="com.travel.model.Comment">
+    	SELECT *
+    	FROM comments
+    	WHERE reactUser = #{id}
+    	ORDER BY regidate DESC
+    	LIMIT ${page}, 10
+    </select>
 </mapper>

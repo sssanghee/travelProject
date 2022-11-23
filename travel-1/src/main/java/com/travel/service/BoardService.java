@@ -4,7 +4,9 @@ import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -13,6 +15,8 @@ import com.travel.mapper.BoardMapper;
 import com.travel.model.Board;
 import com.travel.model.Comment;
 import com.travel.model.Like;
+import com.travel.model.forMyAllContents;
+import com.travel.model.forMyProfileContent;
 
 @Service
 public class BoardService {
@@ -46,6 +50,28 @@ public class BoardService {
 		List<Board> resultBoard = boardMapper.pageItem(lowNum);
 		
 		return resultBoard;
+	}
+	
+	public List<?> myBoardPagination(int page, String id, String type){
+		int lowNum = (page -1) * 10;
+		forMyProfileContent formyprofileContent = new forMyProfileContent();
+		formyprofileContent.setId(id);
+		formyprofileContent.setPage(lowNum);
+		
+		if(type.equals("board")) {
+			List<Board> resultBoard = boardMapper.myPageItem(formyprofileContent);
+			
+			return resultBoard;
+		} else {
+			List<Comment> resultComment = boardMapper.myCommentItem(formyprofileContent);
+			
+			return resultComment;
+		}
+	}
+	
+	public forMyAllContents myProfileTotalCount(String id) {
+		forMyAllContents formyallContents = boardMapper.myProfileTotalCounts(id);
+		return formyallContents;
 	}
 	
 	public int countTotalBoard() {

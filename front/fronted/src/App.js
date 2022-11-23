@@ -15,7 +15,7 @@ import Signup from './components/Signup';
 import MainPage from './components/MainPage';
 import AddBoard from './components/board/AddBoard';
 import DetailBoard from './components/board/DetailBoard';
-
+import Profile from './components/Profile';
 function App() {
 
   return (
@@ -31,7 +31,7 @@ function App() {
           <Route path="signup" element={ <Signup /> } />
           <Route path="addBoard" element={ <AddBoard />} />
           <Route path="detailBoard" element={ <DetailBoard /> } />
-
+          <Route path="profile" element={ <Profile /> } />
           <Route path="*" element={ <NotFound /> } />
 
         </Routes>

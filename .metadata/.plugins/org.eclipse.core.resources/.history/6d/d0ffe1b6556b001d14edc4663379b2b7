@@ -1,0 +1,34 @@
+package com.travel.mapper;
+
+import java.util.List;
+import java.util.Map;
+
+import org.apache.ibatis.annotations.Mapper;
+
+import com.travel.model.Board;
+import com.travel.model.Comment;
+import com.travel.model.Like;
+import com.travel.model.forMyAllContents;
+import com.travel.model.forMyProfileContent;
+
+@Mapper
+public interface BoardMapper {
+	public int getBoardNum(String id);		//특정 사용자의 게시글 번호확인위해
+	public void insertBoard(Board board);	//게시글 저장
+	
+	public List<Board> pageItem(int page);	//특정 페이지의 아이템가져오기 위해
+	public int countTotalBoard(); 			//총 게시글수를 확인해 페이징의 끝을 넣기 위해
+	
+	public int likeInfo(Like likeData);		//좋아요를 한 이력이 있는지 확인하기위해
+	public void delLikeInfo(Like likeData);	//좋아요한 이력이 있으면 삭제처리
+	public void insertLikeInfo(Like likeData); //좋아요한 이력없으면 추가위해
+	public int totalLike(Like likeData); 	//특정ㄱ ㅔ시물 총 좋아요 수 결과
+	
+	public int findCommentNum(Comment comment);		//댓글순서를 정렬하기 위해
+	public void addComment(Comment comment);		//댓글 인서트위해
+	public List<Comment> findAllComment(Comment comment); 	//특정 게시물 댃글 다 가져오기 위함
+	
+	public List<Board> myPageItem(forMyProfileContent params);	//프로필에 있는 내가 쓴 게시글을 보기위해
+	public forMyAllContents myProfileTotalCounts(String id);	//id의 게시물, 좋아요, 댓글수 모두 가져옴
+	public List<Comment> myCommentItem(forMyProfileContent params); //내가쓴 댓글 모두 보기위해
+}
